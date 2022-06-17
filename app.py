@@ -34,6 +34,10 @@ class Message(Resource):
 
     @cross_origin()
     def get(self):
+        query = request.args
+        q = query["q"]
+        if q == "Ping":
+            return "OK"
         return request.args.get("msg", default="", type=str)
 
 
