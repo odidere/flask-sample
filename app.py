@@ -1,4 +1,3 @@
-from requests import request
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 from flask_restful import Api, Resource
