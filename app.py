@@ -27,7 +27,7 @@ app.config[
 app.config['BUNDLE_ERRORS'] = settings.BUNDLE_ERRORS
 
 api = Api(app)
-api.prefix = '/api'
+api.prefix = '/'
 
 
 class Message(Resource):
