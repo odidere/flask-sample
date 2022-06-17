@@ -21,9 +21,6 @@ def handle_error(e):
 for ex in default_exceptions:
     app.register_error_handler(ex, handle_error)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = settings.SQLALCHEMY_DATABASE_URI
-app.config[
-    'SQLALCHEMY_TRACK_MODIFICATIONS'] = settings.SQLALCHEMY_TRACK_MODIFICATIONS
 app.config['BUNDLE_ERRORS'] = settings.BUNDLE_ERRORS
 
 api = Api(app)
@@ -38,7 +35,27 @@ class Message(Resource):
         q = query["q"]
         if q == "Ping":
             return "OK"
-        return request.args.get("msg", default="", type=str)
+        elif q == "Degree":
+            return "Bachelor of Science in Computer Science, Master of Science in Mathematics and Computer Science"
+        elif q == "Name":
+            return "Oluwashina Samuel Aladejubelo"
+        elif q == "Phone":
+            return "+2347031096039"
+        elif q == "Source":
+            return "https://github.com/odidere/flask-sample.git"
+        elif q == "Status":
+            return "No. Working remotely"
+        elif q == "Years":
+            return "15"
+        elif q == "Puzzle":
+            return ""
+        elif q == "Resume":
+            return "https://docs.google.com/document/d/1cZN_UhG0e-gVY6I07bpDWCgjjwN-p9EzV_eV1GVFP8k/edit?usp=sharing"
+        elif q == "Referrer":
+            return "Turing.com"
+        elif q == "Position":
+            return "Senior Data Engineer"
+        return request.args.get("")
 
 
 api.add_resource(Message, "/")
