@@ -35,7 +35,7 @@ class Message(Resource):
 
     @cross_origin()
     def get(self):
-        return {"message": request.args.get("msg")}
+        return request.args.get("msg")
 
 
 api.add_resource(Message, "/")
