@@ -35,27 +35,94 @@ class Message(Resource):
         q = query["q"]
         if q == "Ping":
             return "OK"
-        elif q == "Degree":
+        if q == "Degree":
             return "Bachelor of Science in Computer Science, Master of Science in Mathematics and Computer Science"
-        elif q == "Name":
+        if q == "Name":
             return "Oluwashina Samuel Aladejubelo"
-        elif q == "Phone":
+        if q == "Phone":
             return "+2347031096039"
-        elif q == "Source":
+        if q == "Email":
+            return "Shinasamuel@gmail.com"
+        if q == "Source":
             return "https://github.com/odidere/flask-sample.git"
-        elif q == "Status":
+        if q == "Status":
             return "No. Working remotely"
-        elif q == "Years":
+        if q == "Years":
             return "15"
-        elif q == "Puzzle":
+        if q == "Puzzle":
             return ""
-        elif q == "Resume":
+        if q == "Resume":
             return "https://docs.google.com/document/d/1cZN_UhG0e-gVY6I07bpDWCgjjwN-p9EzV_eV1GVFP8k/edit?usp=sharing"
-        elif q == "Referrer":
+        if q == "Referrer":
             return "Turing.com"
-        elif q == "Position":
+        if q == "Position":
             return "Senior Data Engineer"
-        return request.args.get("")
+        if q == "Puzzle":
+            return self.solve_puzzle("")
+        return ""
+
+    def parse_matrix(self, puzzle):
+        puzzle_mat = []
+        print(type(puzzle), puzzle)
+        puzzle = str(puzzle.strip()).split("\n")
+        print(puzzle)
+        for pos, line in enumerate(puzzle):
+            if pos == 0 or pos == 1:
+                continue
+            else:
+                puzzle_mat.append(list(line[1:]))
+        return puzzle_mat
+
+    def parse_str(self, puzzle_mat):
+        newline = '\n'
+        temp = ' ABCD' + newline
+        for pos, row in enumerate(puzzle_mat):
+            t = temp[pos + 1] + ''.join([r for r in row]) + newline
+            temp += t
+        return temp
+
+    def solve_puzzle(self, puzzle):
+        puzzle_mat = self.parse_matrix(puzzle)
+        puzzle_mat = Message.level_1(puzzle_mat)
+        puzzle_mat_2 = Message.level_2(puzzle_mat)
+        puzzle_mat_2 = Message.level_2(puzzle_mat_2)
+        puzzle = self.parse_str(puzzle_mat_2)
+        return puzzle
+
+
+@staticmethod
+def level_1(mat_1):
+    mat_2 = [['-' for i in range(len(mat_1))] for j in range(len(mat_1[0]))]
+    for pos_i, i in enumerate(mat_1):
+        for pos_j, j in enumerate(mat_1[pos_i]):
+            if pos_i == pos_j:
+                mat_2[pos_i][pos_j] = '='
+            else:
+                if mat_1[pos_i][pos_j] == '>':
+                    mat_2[pos_i][pos_j] = '>'
+                    mat_2[pos_j][pos_i] = '<'
+                elif mat_1[pos_i][pos_j] == '<':
+                    mat_2[pos_i][pos_j] = '<'
+                    mat_2[pos_j][pos_i] = '>'
+    return mat_2
+
+
+@staticmethod
+def level_2(self, mat_1):
+    mat_2 = [[mat_1[i][j] for i in range(len(mat_1))]
+             for j in range(len(mat_1[0]))]
+    for pos_i, i in enumerate(mat_1):
+        for pos_j, j in enumerate(mat_1[pos_i]):
+            if not (pos_i == pos_j) and mat_1[pos_i][pos_j] == '-':
+                for k in range(4):
+                    if pos_j != k and pos_i != k:
+                        # print(pos_i, k, pos_j, k)
+                        if mat_1[pos_i][k] == mat_1[k][
+                                pos_j] and mat_1[k][pos_j] != '-':
+                            # print('---', pos_i, k, pos_j, k)
+                            mat_2[pos_i][
+                                pos_j] = '>' if mat_1[k][pos_j] == '<' else '<'
+    return mat_2
 
 
 api.add_resource(Message, "/")
