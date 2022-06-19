@@ -49,8 +49,6 @@ class Message(Resource):
             return "No. Working remotely"
         if q == "Years":
             return "15"
-        if q == "Puzzle":
-            return ""
         if q == "Resume":
             return "https://docs.google.com/document/d/1cZN_UhG0e-gVY6I07bpDWCgjjwN-p9EzV_eV1GVFP8k/edit?usp=sharing"
         if q == "Referrer":
@@ -59,7 +57,7 @@ class Message(Resource):
             return "Senior Data Engineer"
         if q == "Puzzle":
             return self.solve_puzzle(query.get("d", None))
-        return ""
+        return q
 
     def parse_matrix(self, puzzle):
         puzzle_mat = []
@@ -71,6 +69,7 @@ class Message(Resource):
                 continue
             else:
                 puzzle_mat.append(list(line[1:]))
+        print(self.parse_str(puzzle_mat))
         return puzzle_mat
 
     def parse_str(self, puzzle_mat):
@@ -89,40 +88,39 @@ class Message(Resource):
         puzzle = self.parse_str(puzzle_mat_2)
         return puzzle
 
+    @staticmethod
+    def level_1(mat_1):
+        mat_2 = [['-' for i in range(len(mat_1))]
+                 for j in range(len(mat_1[0]))]
+        for pos_i, i in enumerate(mat_1):
+            for pos_j, j in enumerate(mat_1[pos_i]):
+                if pos_i == pos_j:
+                    mat_2[pos_i][pos_j] = '='
+                else:
+                    if mat_1[pos_i][pos_j] == '>':
+                        mat_2[pos_i][pos_j] = '>'
+                        mat_2[pos_j][pos_i] = '<'
+                    elif mat_1[pos_i][pos_j] == '<':
+                        mat_2[pos_i][pos_j] = '<'
+                        mat_2[pos_j][pos_i] = '>'
+        return mat_2
 
-@staticmethod
-def level_1(mat_1):
-    mat_2 = [['-' for i in range(len(mat_1))] for j in range(len(mat_1[0]))]
-    for pos_i, i in enumerate(mat_1):
-        for pos_j, j in enumerate(mat_1[pos_i]):
-            if pos_i == pos_j:
-                mat_2[pos_i][pos_j] = '='
-            else:
-                if mat_1[pos_i][pos_j] == '>':
-                    mat_2[pos_i][pos_j] = '>'
-                    mat_2[pos_j][pos_i] = '<'
-                elif mat_1[pos_i][pos_j] == '<':
-                    mat_2[pos_i][pos_j] = '<'
-                    mat_2[pos_j][pos_i] = '>'
-    return mat_2
-
-
-@staticmethod
-def level_2(self, mat_1):
-    mat_2 = [[mat_1[i][j] for i in range(len(mat_1))]
-             for j in range(len(mat_1[0]))]
-    for pos_i, i in enumerate(mat_1):
-        for pos_j, j in enumerate(mat_1[pos_i]):
-            if not (pos_i == pos_j) and mat_1[pos_i][pos_j] == '-':
-                for k in range(4):
-                    if pos_j != k and pos_i != k:
-                        # print(pos_i, k, pos_j, k)
-                        if mat_1[pos_i][k] == mat_1[k][
-                                pos_j] and mat_1[k][pos_j] != '-':
-                            # print('---', pos_i, k, pos_j, k)
-                            mat_2[pos_i][
-                                pos_j] = '>' if mat_1[k][pos_j] == '<' else '<'
-    return mat_2
+    @staticmethod
+    def level_2(mat_1):
+        mat_2 = [[mat_1[i][j] for i in range(len(mat_1))]
+                 for j in range(len(mat_1[0]))]
+        for pos_i, i in enumerate(mat_1):
+            for pos_j, j in enumerate(mat_1[pos_i]):
+                if not (pos_i == pos_j) and mat_1[pos_i][pos_j] == '-':
+                    for k in range(4):
+                        if pos_j != k and pos_i != k:
+                            print(pos_i, k, pos_j, k)
+                            if mat_1[pos_i][k] == mat_1[k][
+                                    pos_j] and mat_1[k][pos_j] != '-':
+                                print('---', pos_i, k, pos_j, k)
+                                mat_2[pos_i][pos_j] = '>' if mat_1[k][
+                                    pos_j] == '<' else '<'
+        return mat_2
 
 
 api.add_resource(Message, "/")
