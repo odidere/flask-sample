@@ -3,7 +3,6 @@ from flask_cors import CORS, cross_origin
 from flask_restful import Api, Resource
 from werkzeug.exceptions import HTTPException
 from werkzeug.exceptions import default_exceptions
-import settings
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -20,8 +19,6 @@ def handle_error(e):
 
 for ex in default_exceptions:
     app.register_error_handler(ex, handle_error)
-
-app.config['BUNDLE_ERRORS'] = settings.BUNDLE_ERRORS
 
 api = Api(app)
 api.prefix = '/'
