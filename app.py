@@ -41,7 +41,7 @@ class Message(Resource):
             return "Oluwashina Samuel Aladejubelo"
         if q == "Phone":
             return "+2347031096039"
-        if q == "Email":
+        if q == "Email Address":
             return "Shinasamuel@gmail.com"
         if q == "Source":
             return "https://github.com/odidere/flask-sample.git"
@@ -58,7 +58,7 @@ class Message(Resource):
         if q == "Position":
             return "Senior Data Engineer"
         if q == "Puzzle":
-            return self.solve_puzzle("")
+            return self.solve_puzzle(query.get("d", None))
         return ""
 
     def parse_matrix(self, puzzle):
